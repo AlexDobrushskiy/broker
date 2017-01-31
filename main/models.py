@@ -25,7 +25,7 @@ class ResultView(models.Model):
     buy_price = models.DecimalField(decimal_places=6, max_digits=15, default=0)
     last_sell_price = models.DecimalField(decimal_places=6, max_digits=15, null=True, blank=True)
     date = models.DateField(null=True, blank=True)
-    amount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField(null=True, blank=True)
     target = models.DecimalField(decimal_places=6, max_digits=15, null=True, blank=True)
     cur_price = models.DecimalField(decimal_places=6, max_digits=15)
     percent_diff = models.DecimalField(decimal_places=6, max_digits=15, null=True, blank=True)

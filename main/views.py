@@ -30,13 +30,19 @@ class GenerateResultForm(forms.Form):
             try:
                 portfolio = Portfolio.objects.get(code=stock.code, client_code=client_code)
             except ObjectDoesNotExist:
-                continue
-            percent_diff = 100*(stock.last_price - portfolio.acquisition_price)/portfolio.acquisition_price
+                portfolio = None
             comment_obj = Comment.objects.filter(code=stock.code).first()
             comment = comment_obj.comment if comment_obj else ''
-            ResultView.objects.create(name=stock.name, code=stock.code, buy_price=portfolio.acquisition_price,
-                                      cur_price=stock.last_price, amount=portfolio.total, percent_diff=percent_diff,
-                                      comment=comment)
+
+            if portfolio:
+                percent_diff = 100*(stock.last_price - portfolio.acquisition_price)/portfolio.acquisition_price
+                ResultView.objects.create(name=stock.name, code=stock.code, buy_price=portfolio.acquisition_price,
+                                          cur_price=stock.last_price, amount=portfolio.total, percent_diff=percent_diff,
+                                          comment=comment)
+            else:
+                ResultView.objects.create(name=stock.name, code=stock.code,
+                                          cur_price=stock.last_price,
+                                          comment=comment)
 
 
 class GenerateResultView(FormView):
