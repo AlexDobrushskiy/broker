@@ -17,4 +17,4 @@ class PortfolioAdmin(admin.ModelAdmin):
 
 @admin.register(ResultView)
 class ResultViewAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'buy_price', 'amount', 'cur_price', 'percent_diff',)
+    list_display = ('name', 'code', 'buy_price', 'amount', 'cur_price', 'percent_diff', 'comment', )

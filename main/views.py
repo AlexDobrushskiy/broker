@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django import forms
-from main.models import Stock, Portfolio, ResultView
+from main.models import Stock, Portfolio, ResultView, Comment
 
 
 def root_view(request):
@@ -32,13 +32,16 @@ class GenerateResultForm(forms.Form):
             except ObjectDoesNotExist:
                 continue
             percent_diff = 100*(stock.last_price - portfolio.acquisition_price)/portfolio.acquisition_price
+            comment_obj = Comment.objects.filter(code=stock.code).first()
+            comment = comment_obj.comment if comment_obj else ''
             ResultView.objects.create(name=stock.name, code=stock.code, buy_price=portfolio.acquisition_price,
-                                      cur_price=stock.last_price, amount=portfolio.total, percent_diff=percent_diff)
+                                      cur_price=stock.last_price, amount=portfolio.total, percent_diff=percent_diff,
+                                      comment=comment)
 
 
 class GenerateResultView(FormView):
     form_class = GenerateResultForm
-    success_url = '/'
+    success_url = '/adminmain/resultview/'
 
     def form_valid(self, form):
         form.generate_view()
