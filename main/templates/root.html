@@ -1,4 +1,18 @@
 {% extends 'base.html' %}
 {% block body %}
-<a href="{% url 'stock-import' %}">Export</a>
+    <ul>
+        <li>
+            <a href="{% url 'stock-import' %}">Import Stocks</a>
+        </li>
+        <li>
+            <a href="{% url 'portfolio-import' %}">Import Portfolio</a>
+        </li>
+        <li>
+            <form action="{% url 'generate' %}" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit">
+            </form>
+        </li>
+    </ul>
 {% endblock body %}

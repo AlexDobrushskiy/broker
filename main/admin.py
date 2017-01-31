@@ -1,5 +1,7 @@
 from django.contrib import admin
-from main.models import Stock, Portfolio
+from main.models import Stock, Portfolio, ResultView
+
+
 # Register your models here.
 
 
@@ -10,4 +12,9 @@ class StockAdmin(admin.ModelAdmin):
 
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'code', 'client_code', 'total', 'acquisition_price',)
+
+
+@admin.register(ResultView)
+class ResultViewAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'buy_price', 'amount', 'cur_price', 'percent_diff',)

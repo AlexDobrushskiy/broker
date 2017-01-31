@@ -17,7 +17,9 @@ from django.conf.urls import url
 from django.contrib import admin
 from main import views as main_views
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/?', admin.site.urls),
     url(r'^stock_import', main_views.StockImportFormView.as_view(), name='stock-import'),
+    url(r'^portfolio_import', main_views.PortfolioImportFormView.as_view(), name='portfolio-import'),
+    url(r'^generate', main_views.GenerateResultView.as_view(), name='generate'),
     url(r'', main_views.root_view)
 ]
