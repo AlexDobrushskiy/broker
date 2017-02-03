@@ -32,6 +32,7 @@ class ResultView(models.Model):
     comment = models.TextField(null=True, blank=True)
     has_dividends = models.BooleanField(default=False)
     year_amount = models.DecimalField(decimal_places=6, max_digits=15, null=True, blank=True)
+    divident_year_percent = models.DecimalField(decimal_places=6, max_digits=15, null=True, blank=True)
 
 
 @receiver(post_save, sender=ResultView, dispatch_uid="result_view_post_save")
@@ -44,6 +45,7 @@ def result_view_post_save(sender, instance, created, **kwargs):
     dividend.has_dividends = instance.has_dividends
     dividend.year_amount = instance.year_amount
     dividend.save()
+
 
 class Comment(models.Model):
     code = models.CharField(max_length=16, unique=True)

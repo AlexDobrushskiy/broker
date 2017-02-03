@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django import forms
-from main.models import Stock, Portfolio, ResultView, Comment
+from main.models import Stock, Portfolio, ResultView, Comment, Dividend
 
 
 def root_view(request):
@@ -33,20 +33,32 @@ class GenerateResultForm(forms.Form):
                 portfolio = None
             comment_obj = Comment.objects.filter(code=stock.code).first()
             comment = comment_obj.comment if comment_obj else ''
+            dividend_obj = Dividend.objects.filter(code=stock.code).first()
+            has_dividends = dividend_obj.has_dividends if dividend_obj else False
+            year_amount = dividend_obj.year_amount if dividend_obj else 0
+            if stock.last_price and year_amount is not None:
+                divident_year_percent = year_amount/stock.last_price
+            else:
+                divident_year_percent = 0
 
             if portfolio:
-                percent_diff = 100*(stock.last_price - portfolio.acquisition_price)/portfolio.acquisition_price
+                percent_diff = 100 * (stock.last_price - portfolio.acquisition_price) / portfolio.acquisition_price
                 ResultView.objects.create(name=stock.name, code=stock.code, buy_price=portfolio.acquisition_price,
                                           cur_price=stock.last_price, amount=portfolio.total, percent_diff=percent_diff,
-                                          comment=comment)
+                                          comment=comment, has_dividends=has_dividends,
+                                          divident_year_percent=divident_year_percent)
             else:
                 ResultView.objects.create(name=stock.name, code=stock.code,
                                           cur_price=stock.last_price,
-                                          comment=comment)
+                                          comment=comment, has_dividends=has_dividends,
+                                          divident_year_percent=divident_year_percent)
         stock_codes = [x.code for x in stocks]
         # records in portfolio where there is no stock record
         portfolios = Portfolio.objects.exclude(code__in=stock_codes)
         for portfolio in portfolios:
+            comment_obj = Comment.objects.filter(code=portfolio.code).first()
+            comment = comment_obj.comment if comment_obj else ''
+
             ResultView.objects.create(name=portfolio.name, code=portfolio.code, buy_price=portfolio.acquisition_price,
                                       amount=portfolio.total)
 
