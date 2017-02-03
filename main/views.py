@@ -37,7 +37,7 @@ class GenerateResultForm(forms.Form):
             has_dividends = dividend_obj.has_dividends if dividend_obj else False
             year_amount = dividend_obj.year_amount if dividend_obj else 0
             if stock.last_price and year_amount is not None:
-                divident_year_percent = year_amount/stock.last_price
+                divident_year_percent = 100*year_amount/stock.last_price
             else:
                 divident_year_percent = 0
 
@@ -46,12 +46,12 @@ class GenerateResultForm(forms.Form):
                 ResultView.objects.create(name=stock.name, code=stock.code, buy_price=portfolio.acquisition_price,
                                           cur_price=stock.last_price, amount=portfolio.total, percent_diff=percent_diff,
                                           comment=comment, has_dividends=has_dividends,
-                                          divident_year_percent=divident_year_percent)
+                                          divident_year_percent=divident_year_percent, year_amount=year_amount)
             else:
                 ResultView.objects.create(name=stock.name, code=stock.code,
                                           cur_price=stock.last_price,
                                           comment=comment, has_dividends=has_dividends,
-                                          divident_year_percent=divident_year_percent)
+                                          divident_year_percent=divident_year_percent, year_amount=year_amount)
         stock_codes = [x.code for x in stocks]
         # records in portfolio where there is no stock record
         portfolios = Portfolio.objects.exclude(code__in=stock_codes)
