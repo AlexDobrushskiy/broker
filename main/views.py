@@ -43,6 +43,12 @@ class GenerateResultForm(forms.Form):
                 ResultView.objects.create(name=stock.name, code=stock.code,
                                           cur_price=stock.last_price,
                                           comment=comment)
+        stock_codes = [x.code for x in stocks]
+        # records in portfolio where there is no stock record
+        portfolios = Portfolio.objects.exclude(code__in=stock_codes)
+        for portfolio in portfolios:
+            ResultView.objects.create(name=portfolio.name, code=portfolio.code, buy_price=portfolio.acquisition_price,
+                                      amount=portfolio.total)
 
 
 class GenerateResultView(FormView):
